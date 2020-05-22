@@ -1,2 +1,2 @@
 # RaiseTech_homeworks
-RaiseTechで学習したことを挙げていきます。
+RaiseTechで学習したことを挙げています。
