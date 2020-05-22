@@ -1,3 +1,5 @@
+#コンソールへ「Hello world」の表示
+#条件分岐を学ぶ
 puts "Ruby 「How many times do you come here？」"
 value = gets.to_i
 case value
