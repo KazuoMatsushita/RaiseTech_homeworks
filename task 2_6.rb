@@ -1,4 +1,4 @@
-#クラスを継承して新しいサブクラスを作ってみよう。 WorkplaceCommunication(職場)とか。 
+#クラスを継承して新しいサブクラスを作ってみよう。 WorkplaceCommunication(職場)など。 
 class Communication
     attr_accessor
     def greed
