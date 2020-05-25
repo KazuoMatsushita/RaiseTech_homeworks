@@ -1,3 +1,4 @@
+#コンソールに「HelloWorld」を表示してみよう。＋α
 puts "Ruby 「How many times do you come here？」"
 value = gets.to_i
 case value
@@ -11,4 +12,3 @@ end
 
 puts "Goodbye"
 puts "See you again"
-puts "失敗したマン「失敗した」"
