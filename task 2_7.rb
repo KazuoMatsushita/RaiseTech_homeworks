@@ -1,6 +1,6 @@
 class Communication
     attr_accessor
-    #職場かどうかを判断するメソッドを作って、職場じゃなければ挨拶しないようにしてみよう
+    #職場かどうかを判断するメソッドを作って、職場でなければ挨拶しないようにしてみよう
     def greed
         puts "where are you?"
         @call = gets.to_s
