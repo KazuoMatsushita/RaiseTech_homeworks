@@ -1,4 +1,4 @@
-#コンソールに「HelloWorld」を表示してみよう。＋α
+#コンソールに「HelloWorld」を表示してみよう。＋条件処理
 puts "Ruby 「How many times do you come here？」"
 value = gets.to_i
 case value
