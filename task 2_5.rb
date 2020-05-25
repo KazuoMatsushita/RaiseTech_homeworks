@@ -1,8 +1,8 @@
-#Communicationというクラスを作ってみよう。 
+#Communicationというクラスを作ってみよう
 class Communication
 attr_accessor
-#greetというメソッドを定義してみよう。 
-#greetというメソッド内でHelloという言葉を受けたら、Helloと返す処理を実装してみよう。 
+#greetというメソッドを定義してみよう
+#greetというメソッド内でHelloという言葉を受けたら、Helloと返す処理を実装してみよう
 def greed
     puts "Please say hello"
     @call = gets.to_s
