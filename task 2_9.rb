@@ -1,4 +1,4 @@
-#例外クラスは自作も可能。とにかく例外をraiseしてみよう。
+#例外クラスは自作も可能。とにかく例外をraiseしてみよう！
 class Communication
     attr_accessor
     def greed
