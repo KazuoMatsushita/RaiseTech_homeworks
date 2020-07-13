@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creating VPC and subnet with CloudFormation
+
+Parameters:
+  PJPrefix:
+    Type: String
+
+Resources:
+  #-----------------------------------------------#
+  #VPC作成
+  CFVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      # dedicated | default | host
+      InstanceTenancy: default
+      Tags:
+        - Key: name
+          Value: CFVPC
+  #-----------------------------------------------#
+  #サブネット作成
+  #パブリックサブネット1
+  CFSubnetPublic1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: CFSubnetPublic1a
+      VpcId:
+        Ref: CFVPC
+
+  #パブリックサブネット2
+  CFSubnetPublic1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: CFSubnetPublic1c
+      VpcId:
+        Ref: CFVPC
+
+  #プライベートサブネット1
+  CFSubnetPrivate1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: CFSubnetPrivate1a
+      VpcId:
+        Ref: CFVPC
+
+  #プライベートサブネット2
+  CFSubnetPrivate1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: 10.0.3.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: CFSubnetPrivate1c
+      VpcId:
+        Ref: CFVPC
+
+  #-----------------------------------------------#
+  #ルートテーブル作成
+  #public
+  CFPublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CFPublicRouteTable
+      VpcId: !Ref CFVPC
+
+  #Private
+  CFPrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CFPrivateRouteTable
+      VpcId: !Ref CFVPC
+
+  #ルートテーブル関連付け→サブネット
+  PublicSubnet1aRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref CFSubnetPublic1a
+      RouteTableId: !Ref CFPublicRouteTable
+
+  PublicSubnet1cRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref CFSubnetPublic1c
+      RouteTableId: !Ref CFPublicRouteTable
+
+  #-----------------------------------------------#
+  #インターネットゲートウェイ作成
+  CFInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CFInternetGateway
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref CFVPC
+      InternetGatewayId: !Ref CFInternetGateway
+
+  #-----------------------------------------------#
+  #ルーティング
+  route:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref CFInternetGateway
+      RouteTableId: !Ref CFPublicRouteTable
+
+  #-----------------------------------------------#
+  #セキュリティグループ
+  #パブリック
+  CFPubricEC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: {}
+      GroupName: CFPubricEC2SecurityGroup
+      Tags:
+        Key: Name
+        Value: CFPubricEC2SecurityGroup
+      VpcId: !Ref CFVPC
+      GroupDescription: Inbound
+      SecurityGroupIngress:
+        #ssh
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        #http
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        #https
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        #rails
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+      
